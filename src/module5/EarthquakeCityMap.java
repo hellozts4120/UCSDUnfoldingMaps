@@ -120,7 +120,7 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
-		
+		drawLinesInsideThreatCircle(cityMarkers);
 	}
 	
 	/** Event handler that gets called automatically when the 
@@ -224,6 +224,19 @@ public class EarthquakeCityMap extends PApplet {
 		for(Marker cur : quakeMarkers){
 			if(cur.getLocation().getDistance(lastClicked.getLocation()) > ((EarthquakeMarker) cur).threatCircle()){
 				cur.setHidden(true);
+			}
+		}
+	}
+	
+	public void drawLinesInsideThreatCircle(List<Marker> markers){
+		if(lastClicked instanceof OceanQuakeMarker){
+			final float[] lastClickedScreenPosition = ((CommonMarker) lastClicked).getScreenPosition(map).array();
+			for(Marker cur : cityMarkers){
+				if(cur.getLocation().getDistance(lastClicked.getLocation()) < ((OceanQuakeMarker)lastClicked).threatCircle()){
+					final float[] cityMarkerPosition = ((CommonMarker) cur).getScreenPosition(map).array();
+					line(lastClickedScreenPosition[0], lastClickedScreenPosition[1], cityMarkerPosition[0], cityMarkerPosition[1]);
+					
+				}
 			}
 		}
 	}
