@@ -33,7 +33,9 @@ public class LandQuakeMarker extends EarthquakeMarker {
 		// and how it is set in the EarthquakeMarker constructor
 		
 		// TODO: Implement this method
-		
+		final float diameter = 2 * (float) Math.log1p(getRadius()) * 2.5f;
+		//final: is same as 'const' in C++;
+		pg.ellipse(x, y, diameter, diameter);
 	}
 	
 
