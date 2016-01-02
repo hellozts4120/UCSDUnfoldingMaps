@@ -17,6 +17,7 @@ import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
@@ -85,7 +86,7 @@ public class EarthquakeCityMap extends PApplet {
 		//earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
-		//earthquakesURL = "quiz2.atom";
+		earthquakesURL = "quiz2.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -117,7 +118,7 @@ public class EarthquakeCityMap extends PApplet {
 
 	    // could be used for debugging
 	    printQuakes();
-	    sortAndPrint(5);	
+	    sortAndPrint(20);	
 	    // (3) Add markers to map
 	    //     NOTE: Country markers are not added to the map.  They are used
 	    //           for their geometric properties
@@ -133,6 +134,7 @@ public class EarthquakeCityMap extends PApplet {
 		map.draw();
 		addKey();
 		
+		drawRectAboutThreatQuake(cityMarkers);
 	}
 	
 	
@@ -258,6 +260,36 @@ public class EarthquakeCityMap extends PApplet {
 					}
 				}
 				return;
+			}
+		}
+	}
+	
+	private void drawRectAboutThreatQuake(List<Marker> markers){
+		int i = 0;
+		float MagSum = 0;
+		if(lastClicked instanceof CityMarker){
+			for(Marker quake : quakeMarkers){
+				EarthquakeMarker quakeMarker = (EarthquakeMarker)quake;
+				if (quakeMarker.getDistanceTo(lastClicked.getLocation()) 
+						> quakeMarker.threatCircle()) {
+				}
+				else{
+					i++;
+					MagSum += quakeMarker.getMagnitude();
+				}
+			}
+		}
+		String QuakeTime = "Number of Threat: " + i;
+		float AvgMag = (float) (MagSum * (1.0) / i);
+		String QuakeAverage = "Average Magnitude of Threat: " + AvgMag;
+		if(lastClicked instanceof CityMarker){
+			rectMode(PConstants.CORNER);
+			rect(mouseX, mouseY, 250, 50);
+			fill(0, 0, 0);
+			textAlign(PConstants.LEFT, PConstants.TOP);
+			text(QuakeTime, mouseX + 2, mouseY + 2);
+			if(i > 0){
+				text(QuakeAverage, mouseX + 2, mouseY + 15);
 			}
 		}
 	}
